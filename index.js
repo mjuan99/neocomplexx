@@ -4,7 +4,7 @@ const app = express()
 const fs = require("fs")
 const jsPackacge = JSON.parse(fs.readFileSync("package.json"))
 
-app.get('/', (req, res) => {
+app.get('/health', (req, res) => {
     res.json({nombre: jsPackacge.name, version: jsPackacge.version})
 })
 
