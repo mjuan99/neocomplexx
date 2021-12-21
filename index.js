@@ -4,6 +4,8 @@ require('dotenv').config();
 const express = require("express");
 const app = express();
 
+app.use(express.json());
+
 //Inicializacion de sequelize
 const { Sequelize, DataTypes } = require('sequelize');
 const sequelize = new Sequelize(process.env.DATABASE, process.env.USER, process.env.PASSWORD, {
@@ -41,7 +43,7 @@ app.get('/health', (req, res) => {
     retornarRegistro();
 });
 
-// POST /users?email=<userEmail>&password=<userPassword> --> crea un usuario con el email y password indicados en caso de que no exista
+// POST /users  body: {"email": "<userEmail>", "password": "<userPassword>"} --> crea un usuario con el email y password indicados en caso de que no exista
 app.post('/users', (req, res) => {
     const registrarUsuario = async function(userEmail, userPassword){
         if(! await existeUsuario(userEmail)){
@@ -52,8 +54,10 @@ app.post('/users', (req, res) => {
             res.send("El usuario indicado ya se encuentra registrado");
     }
     
-    if(req.query.email != undefined && req.query.password != undefined)
-        registrarUsuario(req.query.email, req.query.password);
+    const userEmail = req.body.email
+    const userPassword = req.body.password
+    if(userEmail != undefined && userPassword != undefined)
+        registrarUsuario(userEmail, userPassword);
     else
         res.send("Parametros incorrectos");
 });
@@ -66,7 +70,6 @@ app.get('/login', (req, res) => {
         else
             res.send("Usuario invalido");
     }
-
     if(req.query.email != undefined && req.query.password != undefined)
         login(req.query.email, req.query.password);
     else
