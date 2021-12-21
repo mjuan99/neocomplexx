@@ -34,7 +34,7 @@ async function existeUsuario(userEmail, userPassword){
         return false;
 }
 
-// GET /health --> retorna {"nombre": "Neoxomplexx", "version": "1.0.0"}
+// GET /health --> retorna {"nombre": "Neocomplexx", "version": "1.0.0"}
 app.get('/health', (req, res) => {
     const retornarRegistro = async function(){
         const registros = await registro.findAll({attributes: ['nombre', 'vers']});
