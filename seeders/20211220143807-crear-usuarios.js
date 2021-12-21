@@ -7,6 +7,18 @@ module.exports = {
       password: 'juan',
       createdAt: new Date(),
       updatedAt: new Date()
+    },
+    {
+      email: 'luz@gmail.com',
+      password: 'luz',
+      createdAt: new Date(),
+      updatedAt: new Date()
+    },
+    {
+      email: 'nico@gmail.com',
+      password: 'nico',
+      createdAt: new Date(),
+      updatedAt: new Date()
     }]);
   },
 
