@@ -11,7 +11,7 @@ con.connect(err => {
         console.log("Error al conectarse a la base de datos");
     else{
         app.get('/health', (req, res) => {
-            con.query("SELECT * FROM registro", (err, result, fields) => {
+            con.query("SELECT nombre, vers FROM Registros", (err, result, fields) => {
                 if (!err)
                     res.json({nombre: result[0].nombre, version: result[0].vers});
                 else
