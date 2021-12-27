@@ -7,11 +7,11 @@ app.use(express.json());
 
 
 // Sequelize initialization
-const DBConfig = require('../config/config.js')
+const DBConfig = require('../config/config.js')[process.env.NODE_ENV];
 const { Sequelize, DataTypes } = require('sequelize');
-const sequelize = new Sequelize(DBConfig.development.database, DBConfig.development.username, DBConfig.development.password, {
-    host: DBConfig.development.host,
-    dialect: DBConfig.development.dialect,
+const sequelize = new Sequelize(DBConfig.database, DBConfig.username, DBConfig.password, {
+    host: DBConfig.host,
+    dialect: DBConfig.dialect,
     logging: false
 });
 
@@ -22,8 +22,8 @@ projectInfo.sync();
 user.sync();
 
 /*
-const { createEndpoints } = require('./routes/prueba.js')
-createEndpoints(app)
+const createEndpoints = require('./routes/userController.js');
+createEndpoints(app);
 */
 
 
