@@ -17,10 +17,11 @@ const userRoutes = require('./routes/usersRoutes')
 app.use('/', userRoutes)
 
 app.get('/health', (req, res) => {
-    (async () => {
-        const info = await projectInfo.findOne({attributes: ['nombre', 'vers']});
-        res.json({nombre: info.dataValues.nombre, version: info.dataValues.vers});
-    })()
+    projectInfo.findOne({attributes: ['nombre', 'vers']}).then(info => {
+        res.status(200).send({nombre: info.dataValues.nombre, version: info.dataValues.vers});
+    }).catch(err => {
+        res.status(500).send("Database Connection Error");
+    });
 });
 
 
