@@ -1,7 +1,7 @@
 class PrivateSequelizeController {
     constructor() {
         // Sequelize initialization
-        const DBConfig = require('../../config/config.js')[process.env.NODE_ENV];
+        const DBConfig = require('../../config/config.js')[process.env.NODE_ENV ||'development'];
         const { Sequelize, DataTypes } = require('sequelize');
         this.sequelize = new Sequelize(DBConfig.database, DBConfig.username, DBConfig.password, {
             host: DBConfig.host,
