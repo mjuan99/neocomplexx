@@ -2,89 +2,61 @@
 const user = require('../ORM/sequelizeControler').getInstance().user;
 
 
-// Checks if <userEmail> and <userPassword> corresponds to a user in the database (<userPassword> can be omited)
-function existsUser(userEmail, userPassword){
-    if(userEmail != undefined){
-        let whereJson;
-        if(userPassword != undefined)
-            whereJson = {email: userEmail, password: userPassword};
-        else
-            whereJson = {email: userEmail};
-
-        return new Promise((resolve, reject) => {
-            user.findAll({attributes: ['email', 'password'], where: whereJson}).then(foundUsers => {
-                if(foundUsers.length != 0)
-                    resolve(true);
-                else
-                    resolve(false);
-            }).catch(err => {
-                reject(err);
-            });
-
-        });
-    }
-    else
-        return false;
-}
-
-
 // Endpoints controllers
 
 // Creates a new user in the database if it doesn't exists
-function postUsersController(req, res){
-    const userEmail = req.body.email
-    const userPassword = req.body.password
-    if(userEmail != undefined && userPassword != undefined){
-        existsUser(userEmail).then(existsUserResult => {
-            if(existsUserResult)
+async function postUsersController(req, res){
+    const {email, password} = req.body;
+    try{
+        if(email != undefined && password != undefined){
+            const foundUser = await user.findOne({attributes: ['email', 'password'], where: {email: email}});
+            if(foundUser != null)
                 res.status(400).send("User Already Exists");
             else{
-                user.create({email: userEmail, password: userPassword}).then(() => {
-                    res.status(200).send("User Created");
-                }).catch(err => {
-                    res.status(500).send("Database Connection Error");
-                });
+                await user.create({email: email, password: password});
+                res.status(200).send("User Created");
             }
-        }).catch(err => {
-            res.status(500).send("Database Connection Error");
-        })
+        }
+        else
+            res.status(400).send("Missing Required Parameters");
     }
-    else
-        res.status(400).send("Missing Required Parameters");
+    catch(error){
+        res.status(500).send("Database Connection Error");
+    }
 }
 
 // Checks if the email and password correspond to a registered user in the database
-function getLoginController(req, res){
-    const userEmail = req.query.email
-    const userPassword = req.query.password
-    if(userEmail != undefined && userPassword != undefined){
-        existsUser(userEmail, userPassword).then(existsUserResult => {
-            if(existsUserResult)
+async function getLoginController(req, res){
+    const {email, password} = req.query;
+    try{
+        if(email != undefined && password != undefined){
+            const foundUser = await user.findOne({attributes: ['email', 'password'], where: {email: email, password: password}});
+            if(foundUser != null)
                 res.status(200).send("User Logged In");
             else
                 res.status(400).send("Invalid User");
-        }).catch(err => {
-            res.status(500).send("Database Connection Error");
-        })
+        }
+        else
+            res.status(400).send("Missing Required Parameters");
     }
-    else
-        res.status(400).send("Missing Required Parameters");
+    catch(error){
+        res.status(500).send("Database Connection Error");
+    }
 }
 
 // Returns the emails and passwords of all the users in the database
-function getUsersController(req, res){
-    if(req.query.password != undefined && req.query.password == "admin")
-        user.findAll({attributes: ['email', 'password']}).then(foundUsers => {
-            const usersArray = [];
-            foundUsers.forEach(user => {
-                usersArray.push(user.dataValues);
-            });
-            res.status(200).send(usersArray);
-        }).catch(err => {
-            res.status(500).send("Database Connection Error");
-        });
-    else
-        res.status(400).send("Bad Request");
+async function getUsersController(req, res){
+    try{
+        if(req.query.password != undefined && req.query.password == "admin"){
+            const foundUsers = await user.findAll({attributes: ['email', 'password']})
+            res.status(200).send(foundUsers.map(user => user.dataValues));
+        }
+        else
+            res.status(400).send("Bad Request");
+    }
+    catch(error){
+        res.status(500).send("Database Connection Error");
+    }
 }
 
 

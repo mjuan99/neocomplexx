@@ -16,12 +16,14 @@ const projectInfo = sequelizeController.projectInfo
 const userRoutes = require('./routes/usersRoutes')
 app.use('/', userRoutes)
 
-app.get('/health', (req, res) => {
-    projectInfo.findOne({attributes: ['nombre', 'vers']}).then(info => {
+app.get('/health', async (req, res) => {
+    try{
+        const info = await projectInfo.findOne({attributes: ['nombre', 'vers']});
         res.status(200).send({nombre: info.dataValues.nombre, version: info.dataValues.vers});
-    }).catch(err => {
+    }
+    catch(error){
         res.status(500).send("Database Connection Error");
-    });
+    }
 });
 
 
