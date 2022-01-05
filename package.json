@@ -2,9 +2,13 @@
   "name": "neocomplexx",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": "16.13.0",
+    "npm": "8.1.0"
+  },
   "main": "neocomplexx.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/index.js",
     "test": "echo \"Error: no test specified\" && exit 1",
     "migrate-up": "npx sequelize-cli db:migrate && npx sequelize-cli db:seed:all",
     "migrate-down": "npx sequelize-cli db:migrate:undo:all"
