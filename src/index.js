@@ -29,5 +29,5 @@ app.get('/health', async (req, res) => {
 
 // Start server
 app.listen(process.env.PORT, () => {
-    console.log("Escuchando en el puerto " + process.env.PORT)
+    console.log("Listening in port " + process.env.PORT)
 });

@@ -2,6 +2,10 @@
   "name": "neocomplexx",
   "version": "1.0.0",
   "description": "",
+  "engines": {
+    "node": "16.13.0",
+    "npm": "8.1.0"
+  },
   "main": "neocomplexx.js",
   "scripts": {
     "start": "node src/index.js",
